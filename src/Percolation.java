@@ -8,19 +8,6 @@ public class Percolation
   private boolean _grid[][];
   private QuickUnionFind _quf;
 
-  private void validate(int row_, int col_) throws IllegalArgumentException
-  {
-    if ((row_ < 1 || row_ > _gridSize) || (col_ < 1 || col_ > _gridSize))
-    {
-      throw new IllegalArgumentException();
-    }
-  }
-
-  private int getArrayIndex(int row_, int col_)
-  {
-    return _gridSize * row_ + col_;
-  }
-
   // create n-by-n grid, with all sites blocked
   public Percolation(int n_) throws IllegalArgumentException
   {
@@ -39,6 +26,19 @@ public class Percolation
       _quf.union(_topIndex, index);
       _quf.union(_bottomIndex, (_gridSize * _gridSize - 1 - index));
     }
+  }
+
+  private void validate(int row_, int col_) throws IllegalArgumentException
+  {
+    if ((row_ < 1 || row_ > _gridSize) || (col_ < 1 || col_ > _gridSize))
+    {
+      throw new IllegalArgumentException("Invalid row/column: " + row_ + "/" + col_);
+    }
+  }
+
+  private int getArrayIndex(int row_, int col_)
+  {
+    return _gridSize * row_ + col_;
   }
 
   // open site (row, col) if it is not open already
@@ -84,8 +84,7 @@ public class Percolation
   // is site (row, col) full?
   public boolean isFull(int row_, int col_)
   {
-    validate(row_, col_);
-    return _grid[row_ - 1][col_ - 1];
+    return !isOpen(row_, col_);
   }
 
   // number of open sites
@@ -102,7 +101,6 @@ public class Percolation
         }
       }
     }
-
     return counter;
   }
 
